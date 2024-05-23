@@ -10,7 +10,35 @@
     <input type="file" id="inputFile" accept="video/mp4">
     <button id="compressButton">Compress Video</button>
     <video id="videoPlayer" controls></video>
-    <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.9.5/dist/ffmpeg.min.js"></script>
-    <script src="compress.js"></script>
+    <script>
+        document.getElementById('compressButton').addEventListener('click', async () => {
+            const inputFile = document.getElementById('inputFile').files[0];
+            
+            if (!inputFile) {
+                alert('Please select a video file first.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', inputFile);
+
+            try {
+                const response = await fetch('https://us-central1-vocal-park-418014.cloudfunctions.net/compressVideo', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('videoPlayer').src = data.url;
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+    </script>
 </body>
 </html>
