@@ -11,7 +11,8 @@ document.getElementById('compressButton').addEventListener('click', async () => 
     reader.onload = async function (event) {
         const data = new Uint8Array(event.target.result);
         
-        const ffmpeg = await createFFmpeg({ log: true });
+        const { createFFmpeg, fetchFile } = FFmpeg;
+        const ffmpeg = createFFmpeg({ log: true });
         await ffmpeg.load();
         
         ffmpeg.FS('writeFile', 'input.mp4', data);
